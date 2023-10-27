@@ -1,5 +1,6 @@
-package view;
+package mini3.view;
 
+import mini3.controller.GameController;
 import mini3.controller.*;
 
 /**
@@ -20,7 +21,7 @@ public class Adventure {
 	/**
 	 * Method Adventure
 	 * Constructor for the Adventure class
-	 * Creates an instance of the GameController class which is the interface into the controller package
+	 * Creates an instance of the GameController class which is the interface into the mini3.gameExceptions.controller package
 	 */
 	public Adventure() {
 		// TODO - implement Adventure.Adventure

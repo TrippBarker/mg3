@@ -1,7 +1,9 @@
-package model;
+package mini3.model;
 
+import mini3.gameExceptions.GameException;
+import mini3.controller.Item;
+import mini3.controller.Room;
 import mini3.controller.*;
-import mini3.gameExceptions.*;
 
 /**
  * Class: RoomDB

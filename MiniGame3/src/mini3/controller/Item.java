@@ -1,4 +1,4 @@
-package controller;
+package mini3.controller;
 
 /**
  * Class: Item

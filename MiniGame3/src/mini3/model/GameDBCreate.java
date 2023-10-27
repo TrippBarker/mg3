@@ -1,6 +1,6 @@
-package model;
+package mini3.model;
 
-import mini3.gameExceptions.*;
+import mini3.gameExceptions.GameException;
 
 /**
  * Class : GameDBCreate

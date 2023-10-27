@@ -1,6 +1,6 @@
-package controller;
+package mini3.controller;
 
-import mini3.gameExceptions.*;
+import mini3.gameExceptions.GameException;
 
 /**
  * Class: GameController
@@ -8,7 +8,7 @@ import mini3.gameExceptions.*;
  * @version 1.3
  * Course: ITEC 3860
  * Written: Sep 12, 2023
- * This class – Is the UI to controller interface for mini game 3
+ * This class – Is the UI to mini3.gameExceptions.controller interface for mini game 3
  * All user interactions will be sent to this class to be sent on for further processing.
  */
 public class GameController {

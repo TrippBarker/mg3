@@ -1,4 +1,4 @@
-package model;
+package mini3.model;
 
 /**
  * Class: SQLiteDB

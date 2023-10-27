@@ -1,4 +1,4 @@
-package gameExceptions;
+package mini3.gameExceptions;
 
 import java.io.*;
 

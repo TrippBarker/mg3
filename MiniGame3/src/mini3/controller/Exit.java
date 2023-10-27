@@ -1,6 +1,8 @@
-package controller;
+package mini3.controller;
 
-import mini3.gameExceptions.*;
+import mini3.gameExceptions.GameException;
+
+import java.util.Arrays;
 
 /**
  * Class: Exit

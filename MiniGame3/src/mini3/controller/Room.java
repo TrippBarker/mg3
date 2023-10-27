@@ -1,8 +1,10 @@
-package controller;
+package mini3.controller;
 
 import java.util.*;
+
+import mini3.gameExceptions.GameException;
 import mini3.model.*;
-import mini3.gameExceptions.*;
+import mini3.model.RoomDB;
 
 /**
  * Class: Room

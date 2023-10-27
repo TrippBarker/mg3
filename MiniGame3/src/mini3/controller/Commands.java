@@ -1,6 +1,8 @@
-package controller;
+package mini3.controller;
 
-import mini3.gameExceptions.*;
+import mini3.gameExceptions.GameException;
+
+import java.util.Arrays;
 
 /**
  * Class: Commands
@@ -135,7 +137,7 @@ class Commands {
 	 * Updates the Player by removing the item from the backpack
 	 * throws an exception for if Item is not in the inventory
 	 * @param cmd - String that contains the command entered by the user
-	 * @param room - the current Room from view.Adventure
+	 * @param room - the current Room from mini3.gameExceptions.view.Adventure
 	 * @return String - the Item has been dropped
 	 * @throws GameException
 	 */
@@ -148,7 +150,7 @@ class Commands {
 	 * Method lookItem
 	 * returns the String of the item or an "I don't see " the item message
 	 * @param cmd - String that contains the command entered by the user
-	 * @param room - the current Room from view.Adventure
+	 * @param room - the current Room from mini3.gameExceptions.view.Adventure
 	 * @return String - the String for the look command
 	 * @throws GameException
 	 */

@@ -1,7 +1,8 @@
-package model;
+package mini3.model;
 
+import mini3.gameExceptions.GameException;
+import mini3.controller.Exit;
 import mini3.controller.*;
-import mini3.gameExceptions.*;
 
 /**
  * Class: ExitDB
