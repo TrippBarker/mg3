@@ -22,13 +22,12 @@ public class GameController {
 	 * Instatiates the Commands object for the game
 	 */
 	public GameController() {
-		// TODO - implement GameController.GameController
-		throw new UnsupportedOperationException();
+		this.commands = new Commands();
 	}
 
 	/**
 	 * Method : start
-	 * Checks to see if the DB fiel exists and if not creates it
+	 * Checks to see if the DB file exists and if not creates it
 	 * by calling GameDBCreate buildTables().
 	 */
 	public void start() throws GameException {
@@ -57,8 +56,7 @@ public class GameController {
 	 * @throws GameException if the command is invalid
 	 */
 	public String executeCommand(String cmd) throws GameException {
-		// TODO - implement GameController.executeCommand
-		throw new UnsupportedOperationException();
+		return commands.executeCommand(cmd);
 	}
 
 	/**

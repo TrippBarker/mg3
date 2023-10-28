@@ -48,8 +48,9 @@ public class Player {
 	 * Creates a new player and sets that player's ID to the first room
 	 */
 	public Player() {
-		// TODO - implement Player.Player
-		throw new UnsupportedOperationException();
+		this.curRoom = 1;
+		this.name = "Fred";
+		this.playerID = this.curRoom;
 	}
 
 	/**

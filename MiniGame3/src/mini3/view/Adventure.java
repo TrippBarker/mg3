@@ -2,6 +2,9 @@ package mini3.view;
 
 import mini3.controller.GameController;
 import mini3.controller.*;
+import mini3.model.GameDBCreate;
+
+import java.util.Scanner;
 
 /**
  * Class: Adventure
@@ -15,8 +18,13 @@ import mini3.controller.*;
  */
 public class Adventure {
 
-	private java.util.Scanner input;
+	private Scanner input;
 	private GameController gc;
+	private String introMsg = "Welcome to my adventure game. You will proceed through rooms based upon your entries.\n" +
+			"You can navigate by using the entire direction or just the first letter.\n" +
+			"You can view a room by using the 'Look' command.\n" +
+			"To exit(X) the game, enter X.\n";
+
 
 	/**
 	 * Method Adventure
@@ -24,8 +32,7 @@ public class Adventure {
 	 * Creates an instance of the GameController class which is the interface into the mini3.gameExceptions.controller package
 	 */
 	public Adventure() {
-		// TODO - implement Adventure.Adventure
-		throw new UnsupportedOperationException();
+		this.gc = new GameController();
 	}
 
 	/**
@@ -40,8 +47,11 @@ public class Adventure {
 	 * and backpack commands.
 	 */
 	private void playGame() {
-		// TODO - implement Adventure.playGame
-		throw new UnsupportedOperationException();
+		System.out.println(introMsg);
+		String gcRet = "";
+		do{
+			System.out.println("What would you like to do?");
+		}while(!gcRet.equals("EXIT"));
 	}
 
 	/**
@@ -63,8 +73,10 @@ public class Adventure {
 	 * @param args - String[]
 	 */
 	public static void main(String[] args) {
-		// TODO - implement Adventure.main
-		throw new UnsupportedOperationException();
+		Adventure adv = new Adventure();
+		adv.input = new Scanner(System.in);
+		adv.playGame();
+		adv.input.close();
 	}
 
 }

@@ -27,8 +27,7 @@ class Commands {
 	 * Instantiates a new player object for tracking inventory in the game
 	 */
 	Commands() {
-		// TODO - implement Commands.Commands
-		throw new UnsupportedOperationException();
+		this.player = new Player();
 	}
 
 	/**
@@ -63,8 +62,10 @@ class Commands {
 	 * @throws GameException
 	 */
 	private int validateCommand(String cmdLine) throws GameException {
-		// TODO - implement Commands.validateCommand
-		throw new UnsupportedOperationException();
+		if (cmdLine.equals("X") || cmdLine.equals("EXIT")){
+			return EXIT_COMMAND;
+		}
+		return 0;
 	}
 
 	/**
