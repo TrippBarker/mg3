@@ -1,7 +1,12 @@
 package mini3.controller;
 
 import mini3.gameExceptions.GameException;
+import mini3.model.ItemDB;
+import mini3.model.ItemRoomDB;
+import mini3.model.PlayerDB;
+import mini3.model.RoomDB;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -16,8 +21,8 @@ import java.util.Arrays;
  */
 class Commands {
 
-	protected static final java.util.List<Character> VALID_DIRECTIONS = Arrays.asList('W', 'N', 'S', 'E', 'U', 'D');
-	protected static final java.util.List<Character> ITEM_COMMANDS = Arrays.asList('I', 'R', 'G');
+	protected static final java.util.List<String> VALID_DIRECTIONS = Arrays.asList("W", "WEST", "N", "NORTH", "S", "SOUTH", "E", "EAST", "U", "UP", "D", "DOWN");
+	protected static final java.util.List<String> ITEM_COMMANDS = Arrays.asList("I", "INSPECT", "R", "REMOVE", "G", "GET");
 	public static final int EXIT_COMMAND = 5;
 	private Player player;
 
@@ -27,7 +32,12 @@ class Commands {
 	 * Instantiates a new player object for tracking inventory in the game
 	 */
 	Commands() {
-		this.player = new Player();
+		PlayerDB pdb = new PlayerDB();
+		try {
+			this.player = pdb.getPlayer(1);
+		} catch (GameException ge){
+			System.out.println(ge.getMessage());
+		}
 	}
 
 	/**
@@ -62,10 +72,20 @@ class Commands {
 	 * @throws GameException
 	 */
 	private int validateCommand(String cmdLine) throws GameException {
-		if (cmdLine.equals("X") || cmdLine.equals("EXIT")){
+		String cmd = cmdLine.split(" ")[0];
+		if (cmd.equals("X") || cmd.equals("EXIT")){
 			return EXIT_COMMAND;
+		} else if (VALID_DIRECTIONS.contains(cmd)) {
+			return 1;
+		} else if (ITEM_COMMANDS.contains(cmd)){
+			return 2;
+		} else if (cmd.equals("L") || cmd.equals("LOOK")) {
+			return 3;
+		} else if (cmd.equals("B") || cmd.equals("BACKPACK")){
+			return 4;
+		} else {
+			throw new GameException(cmdLine + " is not a valid command.");
 		}
-		return 0;
 	}
 
 	/**
@@ -78,8 +98,32 @@ class Commands {
 	 * @throws GameException
 	 */
 	protected String executeCommand(String cmd) throws GameException {
-		// TODO - implement Commands.executeCommand
-		throw new UnsupportedOperationException();
+		int commandType = 0;
+		try{
+			commandType = validateCommand(cmd);
+		} catch (GameException ge){
+			return ge.getMessage();
+		}
+		String retString = "";
+		switch (commandType){
+			case 1:
+				retString = move(cmd);
+				break;
+			case 2:
+				retString = itemCommand(cmd);
+				break;
+			case 3:
+				RoomDB rdb = new RoomDB();
+				retString = rdb.getRoom(getPlayerRoom()).display();
+				break;
+			case 4:
+				retString = player.printInventory();
+				break;
+			case 5:
+				retString = "Thank you for playing my game.";
+				break;
+		}
+		return retString;
 	}
 
 	/**
@@ -96,8 +140,18 @@ class Commands {
 	 * @throws GameException
 	 */
 	private String move(String cmdRoom) throws GameException {
-		// TODO - implement Commands.move
-		throw new UnsupportedOperationException();
+		try{
+			RoomDB rdb = new RoomDB();
+			Room curRoom = rdb.getRoom(player.getCurRoom());
+			Room nextRoom = rdb.getRoom(curRoom.validDirection(cmdRoom.charAt(0)));
+			curRoom.setVisited(true);
+			curRoom.updateRoom();
+			player.setCurRoom(nextRoom.getRoomID());
+			player.updatePlayer();
+			return nextRoom.display();
+		} catch (GameException ge){
+			return ge.getMessage();
+		}
 	}
 
 	/**
@@ -111,8 +165,16 @@ class Commands {
 	 * @throws GameException
 	 */
 	private String itemCommand(String cmd) throws GameException {
-		// TODO - implement Commands.itemCommand
-		throw new UnsupportedOperationException();
+		RoomDB rdb = new RoomDB();
+		String itemCmd = cmd.split(" ")[0];
+		if(itemCmd.equals("GET") || itemCmd.equals("G")){
+			return get(cmd, rdb.getRoom(player.getCurRoom()));
+		} else if (itemCmd.equals("REMOVE") || itemCmd.equals("R")){
+			return remove(cmd, rdb.getRoom(getPlayerRoom()));
+		} else if (itemCmd.equals("INSPECT") || itemCmd.equals("I")){
+			return lookItem(cmd, rdb.getRoom(player.getCurRoom()));
+		}
+		throw new GameException("Bad item interaction encountered.");
 	}
 
 	/**
@@ -127,8 +189,19 @@ class Commands {
 	 * @throws GameException
 	 */
 	private String get(String cmd, Room room) throws GameException {
-		// TODO - implement Commands.get
-		throw new UnsupportedOperationException();
+		try{
+			ArrayList<Item> roomItems = room.getRoomItems();
+			for (Item item : roomItems){
+				if(cmd.toUpperCase().contains(item.getItemName().toUpperCase())){
+					room.removeItem(item);
+					player.addItem(item);
+					return item.getItemName() + " has been added to your inventory.";
+				}
+			}
+		} catch (GameException ge){
+			throw new GameException(ge.getMessage());
+		}
+		return "That item does not appear to be in this room.";
 	}
 
 	/**
@@ -143,8 +216,19 @@ class Commands {
 	 * @throws GameException
 	 */
 	private String remove(String cmd, Room room) throws GameException {
-		// TODO - implement Commands.remove
-		throw new UnsupportedOperationException();
+		try{
+			ArrayList<Item> playerInventory = player.getInventory();
+			for (Item item : playerInventory){
+				if (cmd.toUpperCase().contains(item.getItemName().toUpperCase())){
+					player.removeItem(item);
+					room.dropItem(item);
+					return item.getItemName() + " has been dropped.";
+				}
+			}
+		} catch (GameException ge){
+			throw new GameException(ge.getMessage());
+		}
+		return "Player does not appear to have that item in their inventory.";
 	}
 
 	/**
@@ -156,8 +240,13 @@ class Commands {
 	 * @throws GameException
 	 */
 	private String lookItem(String cmd, Room room) throws GameException {
-		// TODO - implement Commands.lookItem
-		throw new UnsupportedOperationException();
+
+		for (Item item : room.getRoomItems()){
+			if (cmd.toUpperCase().contains(item.getItemName().toUpperCase())){
+				return item.getItemDescription();
+			}
+		}
+		return "I don't see that item here.";
 	}
 
 	/**
@@ -166,8 +255,11 @@ class Commands {
 	 * @return String player name.
 	 */
 	protected String getPlayerName() {
-		// TODO - implement Commands.getPlayerName
-		throw new UnsupportedOperationException();
+		return player.getName();
+	}
+
+	protected int getPlayerRoom(){
+		return player.getCurRoom();
 	}
 
 }

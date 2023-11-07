@@ -44,6 +44,12 @@ public class Exit {
 		this.destination = destination;
 	}
 
+	public Exit(String direction, int roomID, int destination){
+		this.direction = direction;
+		this.roomID = roomID;
+		this.destination = destination;
+	}
+
 	@Override
 	public String toString() {
 		// TODO - implement Exit.toString

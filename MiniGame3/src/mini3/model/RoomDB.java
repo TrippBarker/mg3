@@ -5,6 +5,9 @@ import mini3.controller.Item;
 import mini3.controller.Room;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Class: RoomDB
  * @author Rick Price
@@ -28,8 +31,30 @@ public class RoomDB {
 	 * @throws GameException if the roomID cannot be found
 	 */
 	public Room getRoom(int roomID) throws GameException {
-		// TODO - implement RoomDB.getRoom
-		throw new UnsupportedOperationException();
+		Room room;
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM Room where roomID = " + roomID;
+			ResultSet rs = db.queryDB(statement);
+			if (rs.next()){
+				boolean visited = false;
+				if (rs.getInt("visited") == 1){
+					visited = true;
+				}
+				room = new Room(
+						rs.getInt("roomID"),
+						rs.getString("roomName"),
+						rs.getString("roomDescription"),
+						visited
+				);
+			} else {
+				throw new SQLException("Room " + roomID + " was not found");
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Room id " + roomID + " was not found");
+		}
+		return room;
 	}
 
 	/**
@@ -41,8 +66,13 @@ public class RoomDB {
 	 * @throws GameException if the roomID cannot be found
 	 */
 	public java.util.ArrayList<Item> getItems(int roomID) throws GameException {
-		// TODO - implement RoomDB.getItems
-		throw new UnsupportedOperationException();
+		ItemRoomDB irdb = new ItemRoomDB();
+		try{
+			return irdb.getRoomItems(roomID);
+		} catch (GameException ge){
+			throw new GameException();
+		}
+
 	}
 
 	/**
@@ -62,8 +92,14 @@ public class RoomDB {
 	 * @param rm - The Room that is being updated
 	 */
 	public void updateRoom(Room rm) throws GameException {
-		// TODO - implement RoomDB.updateRoom
-		throw new UnsupportedOperationException();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "UPDATE Room SET visited = " + 1 + " WHERE roomID = " + rm.getRoomID();
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Room id " + rm.getRoomID() + " was not updated");
+		}
 	}
 
 }

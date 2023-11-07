@@ -4,6 +4,10 @@ import mini3.gameExceptions.GameException;
 import mini3.controller.Item;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
  * Class: PlayerItemDB
  * @author Rick Price
@@ -23,8 +27,14 @@ public class PlayerItemDB {
 	 * @param item
 	 */
 	public void addItemToInventory(int playerID, Item item) throws GameException {
-		// TODO - implement PlayerItemDB.addItemToInventory
-		throw new UnsupportedOperationException();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "INSERT INTO PlayerItem VALUES(" + playerID + ", " +item.getItemID() + ");";
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Could not add item to player inventory.");
+		}
 	}
 
 	/**
@@ -32,9 +42,15 @@ public class PlayerItemDB {
 	 * THis method removes an item from the player's inventory
 	 * @param item
 	 */
-	public void removeItemFromInventory(Item item) throws GameException {
-		// TODO - implement PlayerItemDB.removeItemFromInventory
-		throw new UnsupportedOperationException();
+	public void removeItemFromInventory(int playerID, Item item) throws GameException {
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "DELETE FROM PlayerItem WHERE itemID = " + item.getItemID() + " AND playerID = " + playerID + ";";
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Could not remove item from inventory.");
+		}
 	}
 
 	/**
@@ -45,8 +61,20 @@ public class PlayerItemDB {
 	 * @throws GameException
 	 */
 	public java.util.ArrayList<Item> getInventory(int playerID) throws GameException {
-		// TODO - implement PlayerItemDB.getInventory
-		throw new UnsupportedOperationException();
+		ArrayList<Item> playerInventory = new ArrayList<>();
+		ItemDB idb = new ItemDB();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM PlayerItem WHERE playerID = " + playerID + ";";
+			ResultSet rs = db.queryDB(statement);
+			while (rs.next()){
+				playerInventory.add(idb.getItem(rs.getInt("itemID")));
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Player inventory could not be retrieved.");
+		}
+		return playerInventory;
 	}
 
 }

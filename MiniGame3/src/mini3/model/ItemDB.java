@@ -4,6 +4,9 @@ import mini3.gameExceptions.GameException;
 import mini3.controller.Item;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Class: ItemDB
  * @author Rick Price
@@ -19,8 +22,6 @@ public class ItemDB {
 	 * ItemDB constructor
 	 */
 	public ItemDB() throws GameException {
-		// TODO - implement ItemDB.ItemDB
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -31,8 +32,25 @@ public class ItemDB {
 	 * @throws GameException if the item ID cannot be found
 	 */
 	public Item getItem(int id) throws GameException {
-		// TODO - implement ItemDB.getItem
-		throw new UnsupportedOperationException();
+		Item item;
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM Item where itemID = " + id;
+			ResultSet rs = db.queryDB(statement);
+			if (rs.next()){
+				item = new Item(
+						rs.getInt("itemID"),
+						rs.getString("itemName"),
+						rs.getString("itemDescription")
+				);
+			} else {
+				throw new SQLException("Item " + id + " was not found");
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Item id " + id + " was not found");
+		}
+		return item;
 	}
 
 }

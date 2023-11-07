@@ -14,8 +14,7 @@ import java.io.*;
 public class GameException extends IOException {
 
 	public GameException() {
-		// TODO - implement GameException.GameException
-		throw new UnsupportedOperationException();
+		super("An unexpected error occurred.");
 	}
 
 	/**
@@ -23,8 +22,7 @@ public class GameException extends IOException {
 	 * @param message
 	 */
 	public GameException(String message) {
-		// TODO - implement GameException.GameException
-		throw new UnsupportedOperationException();
+		super(message);
 	}
 
 }

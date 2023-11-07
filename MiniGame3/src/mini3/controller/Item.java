@@ -38,6 +38,14 @@ public class Item {
 		this.itemDescription = itemDescription;
 	}
 
+	public Item(){}
+
+	public Item(int itemID, String itemName, String itemDescription){
+		this.itemID = itemID;
+		this.itemName = itemName;
+		this.itemDescription = itemDescription;
+	}
+
 	/**
 	 * Method display
 	 * This method returns the itemDescription which is the String that will be displayed in the game

@@ -3,6 +3,9 @@ package mini3.model;
 import mini3.gameExceptions.GameException;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * Class: PlayerDB
  * @author Rick Price
@@ -22,8 +25,14 @@ public class PlayerDB {
 	 * @param player
 	 */
 	public void update(Player player) throws GameException {
-		// TODO - implement PlayerDB.update
-		throw new UnsupportedOperationException();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "UPDATE Player SET curRoom = " + player.getCurRoom() + " WHERE playerID = " + player.getPlayerID() + ";";
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Player id " + player.getPlayerID() + " was not updated.");
+		}
 	}
 
 	/**
@@ -34,8 +43,26 @@ public class PlayerDB {
 	 * @throws GameException
 	 */
 	public Player getPlayer(int id) throws GameException {
-		// TODO - implement PlayerDB.getPlayer
-		throw new UnsupportedOperationException();
+		Player player;
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM Player WHERE PlayerID = " + id;
+			ResultSet rs = db.queryDB(statement);
+			if(rs.next()){
+				player = new Player(
+						rs.getInt("playerID"),
+						rs.getString("playerName"),
+						rs.getInt("curRoom")
+				);
+			} else {
+				throw new SQLException("Player id " + id + " was not found");
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Player id " + id + " was not found.");
+		}
+		return player;
+
 	}
 
 }

@@ -2,6 +2,7 @@ package mini3.view;
 
 import mini3.controller.GameController;
 import mini3.controller.*;
+import mini3.gameExceptions.GameException;
 import mini3.model.GameDBCreate;
 
 import java.util.Scanner;
@@ -19,7 +20,7 @@ import java.util.Scanner;
 public class Adventure {
 
 	private Scanner input;
-	private GameController gc;
+	private GameController gc = new GameController();
 	private String introMsg = "Welcome to my adventure game. You will proceed through rooms based upon your entries.\n" +
 			"You can navigate by using the entire direction or just the first letter.\n" +
 			"You can view a room by using the 'Look' command.\n" +
@@ -46,12 +47,17 @@ public class Adventure {
 	 * Passes the user's command to Commands, executeCommand for processing. This will handle move, item, look,
 	 * and backpack commands.
 	 */
-	private void playGame() {
+	private void playGame() throws GameException {
+		gc.start();
 		System.out.println(introMsg);
 		String gcRet = "";
+		String userInput = "";
+		System.out.println(gc.displayFirstRoom());
 		do{
-			System.out.println("What would you like to do?");
-		}while(!gcRet.equals("EXIT"));
+			userInput = getCommand();
+			gcRet = gc.executeCommand(userInput);
+			System.out.println(gcRet);
+		}while(!gcRet.equals("Thank you for playing my game."));
 	}
 
 	/**
@@ -60,8 +66,8 @@ public class Adventure {
 	 * @return String - the command entered by the user.
 	 */
 	private String getCommand() {
-		// TODO - implement Adventure.getCommand
-		throw new UnsupportedOperationException();
+		System.out.println(gc.getPlayerName() + ", what would you like to do?");
+		return input.nextLine().toUpperCase();
 	}
 
 	/**
@@ -72,7 +78,7 @@ public class Adventure {
 	 * GameController printMap method and printing the String that methods returns.
 	 * @param args - String[]
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws GameException{
 		Adventure adv = new Adventure();
 		adv.input = new Scanner(System.in);
 		adv.playGame();

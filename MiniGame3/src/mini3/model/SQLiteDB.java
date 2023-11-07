@@ -1,5 +1,8 @@
 package mini3.model;
 
+import javax.sql.rowset.JdbcRowSet;
+import java.sql.DriverManager;
+
 /**
  * Class: SQLiteDB
  * @author Rick Price
@@ -14,8 +17,11 @@ public class SQLiteDB extends DB {
 	 * Constructor: SQLiteDB
 	 */
 	public SQLiteDB() throws java.sql.SQLException, ClassNotFoundException {
-		// TODO - implement SQLiteDB.SQLiteDB
-		throw new UnsupportedOperationException();
+		sJdbc = "jdbc:sqlite";
+		sDriverName = "org.sqlite.JDBC";
+		Class.forName(sDriverName);
+		sDbUrl = sJdbc + ":" + dbName;
+		conn = DriverManager.getConnection(sDbUrl);
 	}
 
 	/**
@@ -23,8 +29,12 @@ public class SQLiteDB extends DB {
 	 * @param dbName
 	 */
 	public SQLiteDB(String dbName) throws java.sql.SQLException, ClassNotFoundException {
-		// TODO - implement SQLiteDB.SQLiteDB
-		throw new UnsupportedOperationException();
+		sJdbc = "jdbc:sqlite";
+		sDriverName = "org.sqlite.JDBC";
+		Class.forName(sDriverName);
+		sDbUrl = sJdbc + ":" + dbName;
+		this.dbName = dbName;
+		conn = DriverManager.getConnection(sDbUrl);
 	}
 
 }

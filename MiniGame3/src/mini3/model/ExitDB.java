@@ -4,6 +4,10 @@ import mini3.gameExceptions.GameException;
 import mini3.controller.Exit;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
  * Class: ExitDB
  * @author Rick Price
@@ -23,8 +27,25 @@ public class ExitDB {
 	 * @param roomID
 	 */
 	public java.util.ArrayList<Exit> getExits(int roomID) throws GameException {
-		// TODO - implement ExitDB.getExits
-		throw new UnsupportedOperationException();
+		ArrayList<Exit> exitsAL = new ArrayList<>();
+		Exit exit;
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM Exit where roomID = " + roomID;
+			ResultSet rs = db.queryDB(statement);
+			while (rs.next()){
+				exit = new Exit(
+						rs.getString("direction"),
+						rs.getInt("roomID"),
+						rs.getInt("destination")
+				);
+				exitsAL.add(exit);
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Exit could not be found for " + roomID);
+		}
+		return exitsAL;
 	}
 
 }

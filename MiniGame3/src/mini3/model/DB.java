@@ -1,5 +1,7 @@
 package mini3.model;
 
+import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
+import java.sql.*;
 /**
  * Class : DB.java
  * @author: Rick Price
@@ -26,8 +28,11 @@ public abstract class DB {
 	 * @throws SQLException
 	 */
 	public java.sql.ResultSet queryDB(String sql) throws java.sql.SQLException {
-		// TODO - implement DB.queryDB
-		throw new UnsupportedOperationException();
+		ResultSet rs = null;
+		Statement stmt = conn.createStatement();
+		stmt.setQueryTimeout(timeout);
+		rs = stmt.executeQuery(sql);
+		return rs;
 	}
 
 	/**
@@ -38,8 +43,8 @@ public abstract class DB {
 	 * @throws SQLException
 	 */
 	public boolean updateDB(String SQL) throws java.sql.SQLException {
-		// TODO - implement DB.updateDB
-		throw new UnsupportedOperationException();
+		Statement stmt = conn.createStatement();
+        return stmt.execute(SQL);
 	}
 
 	/**
@@ -49,8 +54,16 @@ public abstract class DB {
 	 * @return int
 	 */
 	public int count(String table) {
-		// TODO - implement DB.count
-		throw new UnsupportedOperationException();
+		int cnt = 0;
+		try{
+			Statement stmt = conn.createStatement();
+			String sql = "SELECT count(*) AS count FROM \""+table+"\";";
+			ResultSet rs = stmt.executeQuery(sql);
+			cnt = rs.getInt(1);
+		} catch (SQLException sqe){
+			System.out.println(sqe.getMessage());
+		}
+		return cnt;
 	}
 
 	/**
@@ -70,8 +83,7 @@ public abstract class DB {
 	 * Purpose: Close the database connection
 	 */
 	public void close() throws java.sql.SQLException {
-		// TODO - implement DB.close
-		throw new UnsupportedOperationException();
+		conn.close();
 	}
 
 }

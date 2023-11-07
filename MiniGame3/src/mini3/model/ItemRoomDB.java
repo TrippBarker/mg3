@@ -4,6 +4,10 @@ import mini3.gameExceptions.GameException;
 import mini3.controller.Item;
 import mini3.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 /**
  * Class: ItemRoomDB
  * @author Rick Price
@@ -23,8 +27,22 @@ public class ItemRoomDB {
 	 * @throws GameException
 	 */
 	protected java.util.ArrayList<Item> getRoomItems(int roomID) throws GameException {
-		// TODO - implement ItemRoomDB.getRoomItems
-		throw new UnsupportedOperationException();
+		ItemDB idb = new ItemDB();
+		ArrayList<Item> roomItems = new ArrayList<>();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "SELECT * FROM ItemRoom where roomID = " + roomID;
+			ResultSet rs = db.queryDB(statement);
+			while(rs.next()){
+				roomItems.add(
+						idb.getItem(rs.getInt("itemID"))
+				);
+			}
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Cannot find item in roomID " + roomID);
+		}
+		return roomItems;
 	}
 
 	/**
@@ -33,19 +51,31 @@ public class ItemRoomDB {
 	 * @param item
 	 */
 	public void removeItem(Item item) throws GameException {
-		// TODO - implement ItemRoomDB.removeItem
-		throw new UnsupportedOperationException();
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "DELETE FROM ItemRoom WHERE itemID = " + item.getItemID() + ";";
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Could not remove item from room");
+		}
 	}
 
 	/**
 	 * Method: addItem
 	 * This method adds an item to the room.
 	 * @param item
-	 * @param roomId
+	 * @param roomID
 	 */
-	public void addItem(Item item, int roomId) throws GameException {
-		// TODO - implement ItemRoomDB.addItem
-		throw new UnsupportedOperationException();
+	public void addItem(Item item, int roomID) throws GameException {
+		try{
+			SQLiteDB db = new SQLiteDB();
+			String statement = "INSERT INTO ItemRoom VALUES(" + item.getItemID() + ", " + roomID + ");";
+			db.updateDB(statement);
+			db.close();
+		} catch (SQLException | ClassNotFoundException ex){
+			throw new GameException("Could not add item to room.");
+		}
 	}
 
 }

@@ -69,9 +69,13 @@ public class Room {
 	 * constructs the room object with the given ID
 	 * @param id id of the room to be constructed
 	 */
-	public Room(int id) throws GameException {
-		// TODO - implement Room.Room
-		throw new UnsupportedOperationException();
+	public Room(int id, String roomName, String roomDesc, boolean visited) throws GameException {
+		this.roomID = id;
+		this.name = roomName;
+		this.description = roomDesc;
+		this.visited = visited;
+		ExitDB edb = new ExitDB();
+		setExits(edb.getExits(getRoomID()));
 	}
 
 	/**
@@ -82,8 +86,17 @@ public class Room {
 	 * @throws GameException if the Item String cannot be built
 	 */
 	public String display() throws GameException {
-		// TODO - implement Room.display
-		throw new UnsupportedOperationException();
+		StringBuilder disStr = new StringBuilder();
+		disStr.append(this.name);
+		if(visited){
+			disStr.append(" visited.\n");
+		} else {
+			disStr.append(" not visited.\n");
+		}
+		disStr.append(buildDescription());
+		disStr.append(buildItems());
+		disStr.append(displayExits());
+		return disStr.toString();
 	}
 
 	/**
@@ -92,8 +105,11 @@ public class Room {
 	 * @return String - the current room description text
 	 */
 	private String buildDescription() {
-		// TODO - implement Room.buildDescription
-		throw new UnsupportedOperationException();
+		StringBuilder descBuilder = new StringBuilder();
+		for (String str : this.description.split("\\|")){
+			descBuilder.append(str + "\n");
+		}
+		return descBuilder.toString();
 	}
 
 	/**
@@ -103,8 +119,20 @@ public class Room {
 	 * @throws GameException if an error retrieving items
 	 */
 	private String buildItems() throws GameException {
-		// TODO - implement Room.buildItems
-		throw new UnsupportedOperationException();
+		StringBuilder items = new StringBuilder();
+		rdb = new RoomDB();
+		try{
+			ArrayList<Item> roomItems = rdb.getItems(this.roomID);
+			items.append("You see:\n");
+			for(Item roomItem : roomItems){
+				items.append(roomItem.getItemDescription() + "\n");
+			}
+		} catch (NullPointerException | GameException ex){
+		}
+		if (items.toString().equals("You see:\n")){
+			return "";
+		}
+		return items.toString();
 	}
 
 	/**
@@ -113,8 +141,8 @@ public class Room {
 	 * @param item - the Item to remove
 	 */
 	public void removeItem(Item item) throws GameException {
-		// TODO - implement Room.removeItem
-		throw new UnsupportedOperationException();
+		ItemRoomDB irdb = new ItemRoomDB();
+		irdb.removeItem(item);
 	}
 
 	/**
@@ -123,8 +151,8 @@ public class Room {
 	 * @param item - the Item to add
 	 */
 	public void dropItem(Item item) throws GameException {
-		// TODO - implement Room.dropItem
-		throw new UnsupportedOperationException();
+		ItemRoomDB irdb = new ItemRoomDB();
+		irdb.addItem(item, this.roomID);
 	}
 
 	/**
@@ -132,8 +160,8 @@ public class Room {
 	 * Calls RoomDB updateRoom(this) to save the current room in the map
 	 */
 	public void updateRoom() throws GameException {
-		// TODO - implement Room.updateRoom
-		throw new UnsupportedOperationException();
+		RoomDB rdb = new RoomDB();
+		rdb.updateRoom(this);
 	}
 
 	/**
@@ -142,8 +170,17 @@ public class Room {
 	 * @return String - the current room exits text
 	 */
 	private String displayExits() {
-		// TODO - implement Room.displayExits
-		throw new UnsupportedOperationException();
+		StringBuilder exitStr = new StringBuilder();
+		int exitsAdded = 0;
+		exitStr.append("You can go ");
+		for (Exit exit : exits){
+			if (exitsAdded++ > 0){
+				exitStr.append(" or ");
+			}
+			exitStr.append(exit.getDirection());
+		}
+		exitStr.append(".");
+		return exitStr.toString();
 	}
 
 	/**
@@ -167,8 +204,12 @@ public class Room {
 	 * @throws GameException if the direction chosen is not valid
 	 */
 	public int validDirection(char cmd) throws GameException {
-		// TODO - implement Room.validDirection
-		throw new UnsupportedOperationException();
+		for (Exit exit : exits){
+			if (cmd == exit.getDirection().charAt(0)){
+				return exit.getDestination();
+			}
+		}
+		throw new GameException("Invalid direction entered.");
 	}
 
 	/**
@@ -178,8 +219,8 @@ public class Room {
 	 * @throws GameException if the list of items cannot be built
 	 */
 	public java.util.ArrayList<Item> getRoomItems() throws GameException {
-		// TODO - implement Room.getRoomItems
-		throw new UnsupportedOperationException();
+		rdb = new RoomDB();
+		return rdb.getItems(this.roomID);
 	}
 
 	/**

@@ -1,6 +1,10 @@
 package mini3.controller;
 
 import mini3.gameExceptions.GameException;
+import mini3.model.PlayerDB;
+import mini3.model.PlayerItemDB;
+
+import java.util.ArrayList;
 
 /**
  * Class: Player
@@ -47,10 +51,10 @@ public class Player {
 	 * Constructor for the Player class
 	 * Creates a new player and sets that player's ID to the first room
 	 */
-	public Player() {
-		this.curRoom = 1;
-		this.name = "Fred";
-		this.playerID = this.curRoom;
+	public Player(int playerID, String name, int curRoom) {
+		this.playerID = playerID;
+		this.name = name;
+		this.curRoom = curRoom;
 	}
 
 	/**
@@ -68,8 +72,8 @@ public class Player {
 	 * @param it - the Item to add to the inventory
 	 */
 	protected void addItem(Item it) throws GameException {
-		// TODO - implement Player.addItem
-		throw new UnsupportedOperationException();
+		PlayerItemDB pidb = new PlayerItemDB();
+		pidb.addItemToInventory(this.playerID, it);
 	}
 
 	/**
@@ -78,8 +82,8 @@ public class Player {
 	 * @param it - the Item to remove from the inventory
 	 */
 	protected void removeItem(Item it) throws GameException {
-		// TODO - implement Player.removeItem
-		throw new UnsupportedOperationException();
+		PlayerItemDB pidb = new PlayerItemDB();
+		pidb.removeItemFromInventory(this.playerID, it);
 	}
 
 	/**
@@ -88,8 +92,13 @@ public class Player {
 	 * @return String - the String of the player's inventory
 	 */
 	protected String printInventory() throws GameException {
-		// TODO - implement Player.printInventory
-		throw new UnsupportedOperationException();
+		PlayerItemDB pidb = new PlayerItemDB();
+		ArrayList<Item> playerInventory = pidb.getInventory(this.playerID);
+		StringBuilder inventoryStr = new StringBuilder();
+		for (Item item : playerInventory){
+			inventoryStr.append(item.getItemDescription() + "\n");
+		}
+		return inventoryStr.toString();
 	}
 
 	/**
@@ -97,8 +106,8 @@ public class Player {
 	 * @return the ArrayList of the current Items in the player's inventory
 	 */
 	protected java.util.ArrayList<Item> getInventory() throws GameException {
-		// TODO - implement Player.getInventory
-		throw new UnsupportedOperationException();
+		PlayerItemDB pidb = new PlayerItemDB();
+		return pidb.getInventory(this.playerID);
 	}
 
 	/**
@@ -106,8 +115,8 @@ public class Player {
 	 * Calls PlayerDB to update changes to the current player.
 	 */
 	public void updatePlayer() throws GameException {
-		// TODO - implement Player.updatePlayer
-		throw new UnsupportedOperationException();
+		PlayerDB pdb = new PlayerDB();
+		pdb.update(this);
 	}
 
 }

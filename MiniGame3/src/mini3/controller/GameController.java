@@ -1,6 +1,9 @@
 package mini3.controller;
 
 import mini3.gameExceptions.GameException;
+import mini3.model.ExitDB;
+import mini3.model.GameDBCreate;
+import mini3.model.RoomDB;
 
 /**
  * Class: GameController
@@ -15,6 +18,7 @@ public class GameController {
 
 	public static final int FIRST_ROOM = 1;
 	private Commands commands;
+	private GameDBCreate gdbc;
 
 	/**
 	 * Method GameController
@@ -31,8 +35,12 @@ public class GameController {
 	 * by calling GameDBCreate buildTables().
 	 */
 	public void start() throws GameException {
-		// TODO - implement GameController.start
-		throw new UnsupportedOperationException();
+		try{
+			gdbc = new GameDBCreate();
+			gdbc.buildTables();
+		} catch (GameException ge){
+		}
+
 	}
 
 	/**
@@ -42,8 +50,10 @@ public class GameController {
 	 * @throws GameException - if the first room is not found.
 	 */
 	public String displayFirstRoom() throws GameException {
-		// TODO - implement GameController.displayFirstRoom
-		throw new UnsupportedOperationException();
+		RoomDB rdb = new RoomDB();
+		Room curRoom = rdb.getRoom(commands.getPlayerRoom());
+		return curRoom.display();
+
 	}
 
 	/**
@@ -77,8 +87,7 @@ public class GameController {
 	 * @return String - player name
 	 */
 	public String getPlayerName() {
-		// TODO - implement GameController.getPlayerName
-		throw new UnsupportedOperationException();
+		return commands.getPlayerName();
 	}
 
 }
