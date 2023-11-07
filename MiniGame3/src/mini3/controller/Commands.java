@@ -32,12 +32,6 @@ class Commands {
 	 * Instantiates a new player object for tracking inventory in the game
 	 */
 	Commands() {
-		PlayerDB pdb = new PlayerDB();
-		try {
-			this.player = pdb.getPlayer(1);
-		} catch (GameException ge){
-			System.out.println(ge.getMessage());
-		}
 	}
 
 	/**
@@ -45,8 +39,12 @@ class Commands {
 	 * Retrieves the name from the database and sets it into the Player object.
 	 */
 	protected void addPlayer() {
-		// TODO - implement Commands.addPlayer
-		throw new UnsupportedOperationException();
+		PlayerDB pdb = new PlayerDB();
+		try {
+			this.player = pdb.getPlayer(1);
+		} catch (GameException ge){
+			System.out.println(ge.getMessage());
+		}
 	}
 
 	/**

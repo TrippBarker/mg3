@@ -38,6 +38,7 @@ public class GameController {
 		try{
 			gdbc = new GameDBCreate();
 			gdbc.buildTables();
+			this.commands.addPlayer();
 		} catch (GameException ge){
 		}
 
